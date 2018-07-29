@@ -2,6 +2,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE UnicodeSyntax #-}
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE RecursiveDo #-}
 
 
 import Reflex.Dom
@@ -35,24 +36,52 @@ euros :: Int -> Money
 euros x = Money x EUR
 
 
+data Message = Inc 
+               | Dec
+
+type Model = Int
+
+initModel :: Model
+initModel = 0
+
+update :: Message -> Model -> Model
+update msg model =
+  case msg of
+    Inc -> 
+      model + 1
+    Dec -> 
+      model - 1
+
+render :: forall t m. MonadWidget t m =>
+          Dynamic t Model -> m (Event t Message)
+render model = do 
+  el "div" (display model)
+  clickEvent <- button "Increment"
+  return (Inc <$ clickEvent)
+
+
 main :: IO ()
 main = mainWidget root
 
 
 root :: forall t m. MonadWidget t m => m ()
-root = do
+root = mdo
   clickEvent <- button "Click Me!" 
   tot <- count clickEvent
-  tot2 <- doubleCountEvents clickEvent
-  list <- simpleList (constDyn ["hello", "world"]) holdUniqDyn
-
+  tot2 <- doubleCount clickEvent
   el "div" (display tot)
   el "div" (display tot2)
+  el "div" blank
+  mapM_ (el "div") (map text ["hello", "world"])
+
+  model <- foldDyn update initModel message
+  message <- render model
+  return ()
 
 
-doubleCountEvents :: forall t m a. MonadWidget t m =>
-                     Event t a -> m (Dynamic t Int)
-doubleCountEvents eventCounter = foldDyn doubleCounter 0 (1 <$ eventCounter)
+doubleCount :: forall t m a. MonadWidget t m =>
+               Event t a -> m (Dynamic t Int)
+doubleCount eventCounter = foldDyn doubleCounter 0 (1 <$ eventCounter)
 
 
 doubleCounter :: Int -> Int -> Int
