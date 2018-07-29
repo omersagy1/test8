@@ -43,11 +43,11 @@ update msg (Model val) =
     Zero -> Model 0
 
 
-makeButton :: forall t m. MonadWidget t m =>
-              T.Text -> Message -> m (Event t Message)
-makeButton label callback = do
-  clickEvent <- el "div" (button label)
-  return (callback <$ clickEvent)
+clickableDiv :: DomBuilder t m =>
+                T.Text -> Message -> m (Event t Message)
+clickableDiv label callback = do
+  (e, _) <- el' "div" (text label)
+  return (callback <$ domEvent Click e)
 
 
 render :: forall t m. MonadWidget t m =>
@@ -55,8 +55,8 @@ render :: forall t m. MonadWidget t m =>
 render model = do 
   el "div" (display (fmap getVal model))
 
-  incButton <- makeButton "Increment" Inc
-  decButton <- makeButton "Decrement" Dec
-  zeroButton <- makeButton "Zero Out" Zero
+  incButton <- clickableDiv "Increment" Inc
+  decButton <- clickableDiv "Decrement" Dec
+  zeroButton <- clickableDiv "Zero Out" Zero
 
   return (leftmost [incButton, decButton, zeroButton])
