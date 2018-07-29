@@ -40,23 +40,26 @@ data Message = Inc
                | Dec
                | Zero
 
-type Model = Int
+data Model = Model Int
 
 initModel :: Model
-initModel = 0
+initModel = Model 0
+
+getVal :: Model -> Int
+getVal (Model x) = x
 
 update :: Message -> Model -> Model
-update msg model =
+update msg (Model val) =
   case msg of
-    Inc -> model + 1
-    Dec -> model - 1
-    Zero -> 0
+    Inc -> Model (val + 1)
+    Dec -> Model (val - 1)
+    Zero -> Model 0
 
 
 render :: forall t m. MonadWidget t m =>
           Dynamic t Model -> m (Event t Message)
 render model = do 
-  el "div" (display model)
+  el "div" (display (fmap getVal model))
 
   clickEvent <- button "Increment"
   let incEvent = Inc <$ clickEvent
