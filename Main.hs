@@ -57,7 +57,11 @@ render :: forall t m. MonadWidget t m =>
 render model = do 
   el "div" (display model)
   clickEvent <- button "Increment"
-  return (Inc <$ clickEvent)
+  let incEvent = Inc <$ clickEvent
+  clickEvent2 <- button "Decrement"
+  let decEvent = Dec <$ clickEvent2
+
+  return (leftmost [incEvent, decEvent])
 
 
 main :: IO ()
