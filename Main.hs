@@ -11,9 +11,16 @@ import qualified Data.Map as Map
 import Data.Monoid
 
 
-data Message = Inc 
-               | Dec
-               | Zero
+main :: IO ()
+main = mainWidget appWidget
+
+
+appWidget :: forall t m. MonadWidget t m => m ()
+appWidget = mdo
+  model <- foldDyn update initModel message
+  message <- render model
+  return ()
+
 
 data Model = Model Int
 
@@ -23,6 +30,11 @@ initModel = Model 0
 getVal :: Model -> Int
 getVal (Model x) = x
 
+
+data Message = Inc 
+               | Dec
+               | Zero
+
 update :: Message -> Model -> Model
 update msg (Model val) =
   case msg of
@@ -31,30 +43,20 @@ update msg (Model val) =
     Zero -> Model 0
 
 
+makeButton :: forall t m. MonadWidget t m =>
+              T.Text -> Message -> m (Event t Message)
+makeButton label callback = do
+  clickEvent <- el "div" (button label)
+  return (callback <$ clickEvent)
+
+
 render :: forall t m. MonadWidget t m =>
           Dynamic t Model -> m (Event t Message)
 render model = do 
   el "div" (display (fmap getVal model))
 
-  clickEvent <- button "Increment"
-  let incEvent = Inc <$ clickEvent
+  incButton <- makeButton "Increment" Inc
+  decButton <- makeButton "Decrement" Dec
+  zeroButton <- makeButton "Zero Out" Zero
 
-  clickEvent2 <- button "Decrement"
-  let decEvent = Dec <$ clickEvent2
-
-  clickEvent3 <- button "Zero Out"
-  let zeroEvent = Zero <$ clickEvent3
-
-  return (leftmost [incEvent, decEvent, zeroEvent])
-
-
-main :: IO ()
-main = mainWidget root
-
-
-root :: forall t m. MonadWidget t m => m ()
-root = mdo
-
-  model <- foldDyn update initModel message
-  message <- render model
-  return ()
+  return (leftmost [incButton, decButton, zeroButton])
