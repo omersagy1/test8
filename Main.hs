@@ -38,6 +38,7 @@ euros x = Money x EUR
 
 data Message = Inc 
                | Dec
+               | Zero
 
 type Model = Int
 
@@ -47,21 +48,26 @@ initModel = 0
 update :: Message -> Model -> Model
 update msg model =
   case msg of
-    Inc -> 
-      model + 1
-    Dec -> 
-      model - 1
+    Inc -> model + 1
+    Dec -> model - 1
+    Zero -> 0
+
 
 render :: forall t m. MonadWidget t m =>
           Dynamic t Model -> m (Event t Message)
 render model = do 
   el "div" (display model)
+
   clickEvent <- button "Increment"
   let incEvent = Inc <$ clickEvent
+
   clickEvent2 <- button "Decrement"
   let decEvent = Dec <$ clickEvent2
 
-  return (leftmost [incEvent, decEvent])
+  clickEvent3 <- button "Zero Out"
+  let zeroEvent = Zero <$ clickEvent3
+
+  return (leftmost [incEvent, decEvent, zeroEvent])
 
 
 main :: IO ()
@@ -78,8 +84,10 @@ root = mdo
   el "div" blank
   mapM_ (el "div") (map text ["hello", "world"])
 
+  -- Main loop.
   model <- foldDyn update initModel message
   message <- render model
+
   return ()
 
 
