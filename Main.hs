@@ -20,7 +20,7 @@ main = mainWidgetWithHead headElement appWidget
 
 headElement :: MonadWidget t m => m ()
 headElement = do
-  el "title" $ text "Main Title"
+  el "title" (text "Test Program!")
   styleSheet "../css/simple.css"
   where
     styleSheet link = elAttr "link" (Map.fromList [
