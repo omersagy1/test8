@@ -12,7 +12,18 @@ import Data.Monoid
 
 
 main :: IO ()
-main = mainWidget appWidget
+main = mainWidgetWithHead headElement appWidget
+
+headElement :: MonadWidget t m => m ()
+headElement = do
+  el "title" $ text "Main Title"
+  styleSheet "../css/simple.css"
+  where
+    styleSheet link = elAttr "link" (Map.fromList [
+          ("rel", "stylesheet")
+        , ("type", "text/css")
+        , ("href", link)
+      ]) $ return ()
 
 
 appWidget :: MonadWidget t m => m ()
