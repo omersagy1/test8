@@ -1,7 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE UnicodeSyntax #-}
-{-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE RecursiveDo #-}
 
 import Reflex.Dom
