@@ -8,6 +8,7 @@ import qualified Data.Map as Map
 import qualified Model
 import qualified Render
 import qualified Update
+import qualified ViewModel
 
 
 main :: IO ()
@@ -29,5 +30,6 @@ headElement = do
 appWidget :: MonadWidget t m => m ()
 appWidget = mdo
   model <- foldDyn Update.update Model.initModel message
-  message <- Render.render model
+  let viewModel = fmap ViewModel.fromModel model
+  message <- Render.render viewModel
   return ()

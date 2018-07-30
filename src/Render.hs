@@ -7,16 +7,17 @@ import qualified Data.Text as T
 import qualified Data.Map as Map
 import Data.Monoid
 
-import qualified Model
-import qualified Message
-import Model (Model)
 import Message (Message)
+import ViewModel (ViewModel)
+
+import qualified Message
+import qualified ViewModel
 
 
 render :: MonadWidget t m =>
-          Dynamic t Model -> m (Event t Message)
+          Dynamic t ViewModel -> m (Event t Message)
 render model = do 
-  el "div" (display (fmap Model.getVal model))
+  el "div" (display (fmap ViewModel.counter model))
 
   incButton <- clickableDiv "Increment" Message.Inc
   decButton <- clickableDiv "Decrement" Message.Dec

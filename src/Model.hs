@@ -1,10 +1,9 @@
 module Model where
 
 
-data Model = Model Int
+data Model = Model
+  { val :: Int
+  }
 
 initModel :: Model
-initModel = Model 0
-
-getVal :: Model -> Int
-getVal (Model x) = x
+initModel = Model { val = 0 }
