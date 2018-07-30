@@ -15,7 +15,7 @@ main :: IO ()
 main = mainWidget appWidget
 
 
-appWidget :: forall t m. MonadWidget t m => m ()
+appWidget :: MonadWidget t m => m ()
 appWidget = mdo
   model <- foldDyn update initModel message
   message <- render model
@@ -50,7 +50,7 @@ clickableDiv label callback = do
   return (callback <$ domEvent Click e)
 
 
-render :: forall t m. MonadWidget t m =>
+render :: MonadWidget t m =>
           Dynamic t Model -> m (Event t Message)
 render model = do 
   el "div" (display (fmap getVal model))
