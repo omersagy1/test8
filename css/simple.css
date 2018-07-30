@@ -1,3 +1,16 @@
-div {
-  color : blue;
+.btn {
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: grey;
+  width: 300px;
+  height: 30px;
+  margin: 20px;
+
+  border-style: solid;
+  border-color: black;
+  border-width: 3px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
