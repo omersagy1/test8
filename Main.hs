@@ -4,7 +4,6 @@
 import Reflex.Dom
 import qualified Data.Text as T
 import qualified Data.Map as Map
-import Data.Monoid
 
 import qualified Model
 import qualified Render
