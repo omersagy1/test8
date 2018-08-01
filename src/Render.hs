@@ -29,6 +29,6 @@ render model = do
 clickableDiv :: DomBuilder t m =>
                 T.Text -> Message -> m (Event t Message)
 clickableDiv label callback = do
-  (e, _) <- elAttr' "div" ("class" =: "btn") (text label)
+  (e, _) <- elAttr' "div" (Map.fromList [("class", "btn")]) 
+                          (text label)
   return (callback <$ domEvent Click e)
-
